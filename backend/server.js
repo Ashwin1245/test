@@ -1,6 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import apiRoutes from '../api/routes/index.js';
+import dotenv from 'dotenv';
+import apiRoutes from './api/routes/index.js';
+import { isAppwriteConfigured } from './config/appwrite.js';
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -43,6 +48,13 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Health check: http://localhost:${PORT}/health`);
   console.log(`🔌 API endpoints: http://localhost:${PORT}/api`);
+  
+  // Check Appwrite configuration
+  if (isAppwriteConfigured()) {
+    console.log(`✅ Appwrite is configured and ready`);
+  } else {
+    console.warn(`⚠️  Appwrite is not configured. Please set APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID, and APPWRITE_API_KEY in your .env file`);
+  }
 });
 
 export default app;
